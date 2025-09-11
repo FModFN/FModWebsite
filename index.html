@@ -5,149 +5,553 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FMod - Chapter 1 Fortnite Revival</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
         }
         
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        body {
+            background: #0a0a0f;
+            overflow-x: hidden;
         }
         
-        .hero-gradient {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #8b5cf6 100%);
+        .cyber-grid {
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
         }
         
-        .glass-effect {
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
         }
         
-        .card-hover {
+        .hologram {
+            background: linear-gradient(135deg, 
+                rgba(0, 255, 255, 0.1) 0%,
+                rgba(255, 0, 255, 0.1) 25%,
+                rgba(255, 255, 0, 0.1) 50%,
+                rgba(0, 255, 255, 0.1) 75%,
+                rgba(255, 0, 255, 0.1) 100%
+            );
+            background-size: 400% 400%;
+            animation: hologram-shift 8s ease-in-out infinite;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            position: relative;
+        }
+        
+        .hologram::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shine 3s infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes hologram-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .neon-text {
+            text-shadow: 
+                0 0 5px currentColor,
+                0 0 10px currentColor,
+                0 0 15px currentColor,
+                0 0 20px currentColor;
+            animation: neon-flicker 4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes neon-flicker {
+            0%, 100% { 
+                text-shadow: 
+                    0 0 5px currentColor,
+                    0 0 10px currentColor,
+                    0 0 15px currentColor,
+                    0 0 20px currentColor;
+            }
+            50% { 
+                text-shadow: 
+                    0 0 2px currentColor,
+                    0 0 5px currentColor,
+                    0 0 8px currentColor,
+                    0 0 12px currentColor;
+            }
+        }
+        
+        .morph-blob {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morph 8s ease-in-out infinite;
+        }
+        
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+        
+        .particle-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: float-particles 15s infinite linear;
+            opacity: 0.7;
+        }
+        
+        @keyframes float-particles {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        .glitch {
+            position: relative;
+            animation: glitch-skew 2s infinite linear alternate-reverse;
+        }
+        
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: inherit;
+            clip: rect(0, 900px, 0, 0);
+        }
+        
+        .glitch::before {
+            animation: glitch-anim 0.3s infinite linear alternate-reverse;
+            color: #ff0080;
+            left: 2px;
+        }
+        
+        .glitch::after {
+            animation: glitch-anim2 0.3s infinite linear alternate-reverse;
+            color: #00ffff;
+            left: -2px;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(64px, 9999px, 66px, 0); }
+            5% { clip: rect(30px, 9999px, 36px, 0); }
+            10% { clip: rect(87px, 9999px, 94px, 0); }
+            15% { clip: rect(10px, 9999px, 15px, 0); }
+            20% { clip: rect(68px, 9999px, 75px, 0); }
+            25% { clip: rect(42px, 9999px, 48px, 0); }
+            30% { clip: rect(18px, 9999px, 24px, 0); }
+            35% { clip: rect(90px, 9999px, 96px, 0); }
+            40% { clip: rect(33px, 9999px, 39px, 0); }
+            45% { clip: rect(75px, 9999px, 81px, 0); }
+            50% { clip: rect(12px, 9999px, 18px, 0); }
+            55% { clip: rect(57px, 9999px, 63px, 0); }
+            60% { clip: rect(81px, 9999px, 87px, 0); }
+            65% { clip: rect(6px, 9999px, 12px, 0); }
+            70% { clip: rect(39px, 9999px, 45px, 0); }
+            75% { clip: rect(72px, 9999px, 78px, 0); }
+            80% { clip: rect(24px, 9999px, 30px, 0); }
+            85% { clip: rect(51px, 9999px, 57px, 0); }
+            90% { clip: rect(93px, 9999px, 99px, 0); }
+            95% { clip: rect(15px, 9999px, 21px, 0); }
+            100% { clip: rect(60px, 9999px, 66px, 0); }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { clip: rect(54px, 9999px, 58px, 0); }
+            5% { clip: rect(28px, 9999px, 32px, 0); }
+            10% { clip: rect(85px, 9999px, 89px, 0); }
+            15% { clip: rect(8px, 9999px, 12px, 0); }
+            20% { clip: rect(66px, 9999px, 70px, 0); }
+            25% { clip: rect(40px, 9999px, 44px, 0); }
+            30% { clip: rect(16px, 9999px, 20px, 0); }
+            35% { clip: rect(88px, 9999px, 92px, 0); }
+            40% { clip: rect(31px, 9999px, 35px, 0); }
+            45% { clip: rect(73px, 9999px, 77px, 0); }
+            50% { clip: rect(10px, 9999px, 14px, 0); }
+            55% { clip: rect(55px, 9999px, 59px, 0); }
+            60% { clip: rect(79px, 9999px, 83px, 0); }
+            65% { clip: rect(4px, 9999px, 8px, 0); }
+            70% { clip: rect(37px, 9999px, 41px, 0); }
+            75% { clip: rect(70px, 9999px, 74px, 0); }
+            80% { clip: rect(22px, 9999px, 26px, 0); }
+            85% { clip: rect(49px, 9999px, 53px, 0); }
+            90% { clip: rect(91px, 9999px, 95px, 0); }
+            95% { clip: rect(13px, 9999px, 17px, 0); }
+            100% { clip: rect(58px, 9999px, 62px, 0); }
+        }
+        
+        @keyframes glitch-skew {
+            2%, 64% { transform: skew(0deg); }
+            4%, 60% { transform: skew(2deg); }
+            62% { transform: skew(0deg); }
+        }
+        
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(10deg);
+        }
+        
+        .magnetic-button {
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .magnetic-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .magnetic-button:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 3s steps(40, end), cursor-blink 0.75s step-end infinite;
+            border-right: 2px solid #00ffff;
+        }
+        
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        @keyframes cursor-blink {
+            from, to { border-color: transparent; }
+            50% { border-color: #00ffff; }
+        }
+        
+        .liquid-button {
+            position: relative;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            background-size: 300% 300%;
+            animation: gradient-shift 4s ease infinite;
+            clip-path: polygon(0% 0%, 100% 0%, 95% 100%, 5% 100%);
             transition: all 0.3s ease;
         }
         
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        .liquid-button:hover {
+            clip-path: polygon(5% 0%, 95% 0%, 100% 100%, 0% 100%);
+            transform: scale(1.05);
         }
         
-        .pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite alternate;
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
-        @keyframes pulse-glow {
-            from {
-                text-shadow: 0 0 20px #3b82f6, 0 0 30px #3b82f6, 0 0 40px #3b82f6;
-            }
-            to {
-                text-shadow: 0 0 30px #8b5cf6, 0 0 40px #8b5cf6, 0 0 50px #8b5cf6;
-            }
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff006e, #8338ec, #3a86ff);
+            z-index: 9999;
+            transition: width 0.1s ease;
         }
         
-        .floating {
-            animation: floating 6s ease-in-out infinite;
+        .data-stream {
+            font-family: 'JetBrains Mono', monospace;
+            color: #00ff00;
+            font-size: 10px;
+            line-height: 1.2;
+            opacity: 0.6;
+            animation: stream-flow 10s linear infinite;
         }
         
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
+        @keyframes stream-flow {
+            0% { transform: translateY(100vh); }
+            100% { transform: translateY(-100vh); }
         }
         
-        .scroll-reveal {
+        .neural-network {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .neural-node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: pulse-node 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-node {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
+        
+        .section-enter {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
+            transform: translateY(100px) rotateX(45deg);
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
-        .scroll-reveal.revealed {
+        .section-enter.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) rotateX(0);
+        }
+        
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.03;
         }
 
-        .neon-border {
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), inset 0 0 20px rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.5);
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.8;
         }
 
-        .text-glow {
-            text-shadow: 0 0 10px currentColor;
+        .terminal-window {
+            background: rgba(0, 20, 0, 0.95);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #00ff00;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal-window::before {
+            content: '● ● ●';
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            color: #ff6b6b;
+            font-size: 12px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: status-pulse 2s ease-in-out infinite;
+        }
+
+        .status-online { background: #00ff00; }
+        .status-busy { background: #ffff00; }
+        .status-offline { background: #ff0000; }
+
+        @keyframes status-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .cosmic-dust {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .dust-particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: cosmic-float 20s infinite linear;
+        }
+        
+        @keyframes cosmic-float {
+            0% {
+                transform: translateY(100vh) translateX(-10vw) rotate(0deg);
+                opacity: 0;
+            }
+            10%, 90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(10vw) rotate(360deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white overflow-x-hidden">
+<body class="text-white relative">
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- 3D Background Canvas -->
+    <canvas id="three-canvas"></canvas>
+
+    <!-- Matrix Background -->
+    <div class="matrix-bg">
+        <canvas id="matrix-canvas" width="100" height="100"></canvas>
+    </div>
+
+    <!-- Particle System -->
+    <div class="cosmic-dust">
+        <!-- Particles will be generated by JS -->
+    </div>
+
+    <!-- Neural Network Background -->
+    <div class="neural-network">
+        <!-- Nodes will be generated by JS -->
+    </div>
+
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 glass-effect">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+    <nav class="fixed top-0 w-full z-50 hologram">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
                 <div class="flex items-center space-x-4">
-                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                        <span class="text-xl font-bold">F</span>
+                    <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center morph-blob">
+                        <span class="text-2xl font-bold neon-text text-cyan-400">F</span>
                     </div>
-                    <span class="text-xl font-bold text-glow">FMod</span>
+                    <div>
+                        <h1 class="text-2xl font-bold neon-text text-cyan-400 glitch" data-text="FMod">FMod</h1>
+                        <div class="text-xs mono text-cyan-300 opacity-60">v2.1.4-BETA</div>
+                    </div>
                 </div>
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="#home" class="hover:text-blue-400 transition-colors duration-300">Home</a>
-                    <a href="#features" class="hover:text-blue-400 transition-colors duration-300">Features</a>
-                    <a href="#download" class="hover:text-blue-400 transition-colors duration-300">Download</a>
-                    <a href="https://auth.fmod.dev" class="bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">Register</a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-cyan-300 hover:text-cyan-400 transition-all duration-300 relative group">
+                        <span>Home</span>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></div>
+                    </a>
+                    <a href="#features" class="text-cyan-300 hover:text-cyan-400 transition-all duration-300 relative group">
+                        <span>Features</span>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></div>
+                    </a>
+                    <a href="#download" class="text-cyan-300 hover:text-cyan-400 transition-all duration-300 relative group">
+                        <span>Download</span>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></div>
+                    </a>
+                    <a href="https://auth.fmod.dev" class="liquid-button px-6 py-3 rounded-lg font-semibold text-white magnetic-button">
+                        <span class="relative z-10">Access Portal</span>
+                    </a>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="min-h-screen hero-gradient relative overflow-hidden flex items-center">
-        <!-- Animated Background Elements -->
-        <div class="absolute inset-0 opacity-20">
-            <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl floating"></div>
-            <div class="absolute top-40 right-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl floating" style="animation-delay: 2s;"></div>
-            <div class="absolute -bottom-32 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl floating" style="animation-delay: 4s;"></div>
+    <section id="home" class="min-h-screen relative overflow-hidden flex items-center cyber-grid">
+        <div class="absolute inset-0">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500 rounded-full opacity-20 morph-blob animate-pulse"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500 rounded-full opacity-20 morph-blob animate-pulse" style="animation-delay: 2s;"></div>
+            <div class="absolute top-3/4 left-1/3 w-64 h-64 bg-pink-500 rounded-full opacity-20 morph-blob animate-pulse" style="animation-delay: 4s;"></div>
         </div>
         
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div class="text-center lg:text-left">
-                    <div class="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-semibold mb-6 animate-pulse">
-                        ⚡ SEASON 8 NOW LIVE
+                    <div class="inline-block hologram px-8 py-3 rounded-full text-sm font-bold mb-8 mono">
+                        <span class="status-indicator status-online"></span>
+                        SEASON 8 • LIVE NOW • 12,847 PLAYERS ONLINE
                     </div>
-                    <h1 class="text-5xl lg:text-7xl font-black mb-6 leading-tight">
-                        Relive Chapter 1 
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 pulse-glow">Fortnite</span>
+                    <h1 class="text-6xl lg:text-8xl font-black mb-8 leading-tight">
+                        <span class="block text-white">RELIVE</span>
+                        <span class="block neon-text text-cyan-400 glitch" data-text="CHAPTER ONE">CHAPTER ONE</span>
+                        <span class="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400">FORTNITE</span>
                     </h1>
-                    <p class="text-xl lg:text-2xl text-gray-300 mb-8 leading-relaxed">
-                        Experience the golden age of Fortnite with <span class="text-blue-400 font-semibold">FMod</span> - where cosmetics are earned through skill, not purchases.
+                    <p class="text-xl lg:text-2xl text-gray-300 mb-10 leading-relaxed max-w-2xl">
+                        Enter the <span class="neon-text text-cyan-400">neural nexus</span> where legends are born. 
+                        Earn cosmetics through pure skill. No payments. No limits. Just glory.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="#download" class="group bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
-                            Download Free
-                            <svg class="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                            </svg>
-                        </a>
-                        <a href="#features" class="group glass-effect px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:bg-opacity-20 transition-all duration-300 transform hover:scale-105">
-                            Learn More
-                            <svg class="inline-block ml-2 w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </a>
+                    <div class="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
+                        <button class="group liquid-button px-10 py-5 rounded-2xl font-bold text-xl text-white magnetic-button transform hover:scale-110 transition-all duration-500">
+                            <span class="relative z-10 flex items-center">
+                                <svg class="w-6 h-6 mr-3 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                </svg>
+                                INITIALIZE DOWNLOAD
+                            </span>
+                        </button>
+                        <button class="group hologram px-10 py-5 rounded-2xl font-bold text-xl text-cyan-400 magnetic-button transform hover:scale-110 transition-all duration-500">
+                            <span class="relative z-10 flex items-center">
+                                <svg class="w-6 h-6 mr-3 group-hover:spin transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                EXPLORE NEXUS
+                            </span>
+                        </button>
+                    </div>
+                    <div class="mt-12 mono text-sm text-gray-400">
+                        <div class="typewriter">
+                            > Initializing connection to Battle Royale matrix...
+                        </div>
                     </div>
                 </div>
+                
                 <div class="relative">
-                    <div class="neon-border rounded-2xl p-8 glass-effect">
-                        <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 h-80 flex items-center justify-center">
-                            <div class="text-center">
-                                <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.01M15 10h1.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
+                    <div class="hologram rounded-3xl p-8 card-3d">
+                        <div class="terminal-window">
+                            <div class="mt-6 space-y-3 text-sm">
+                                <div>$ fmod --status</div>
+                                <div class="text-cyan-400">[INFO] FMod Battle Nexus v2.1.4</div>
+                                <div class="text-green-400">[ONLINE] Servers: NA-EAST, EU-WEST, ASIA-PAC</div>
+                                <div class="text-yellow-400">[QUEUE] Average wait time: 8.3 seconds</div>
+                                <div class="text-purple-400">[PLAYERS] Active warriors: 12,847</div>
+                                <div class="text-pink-400">[COSMETICS] Unlockable items: 1,247</div>
+                                <div class="text-cyan-400 animate-pulse">$ ready_for_battle --initialize</div>
+                                <div class="data-stream">
+                                    01001000 01100101 01110010 01101111<br>
+                                    11000011 10100101 11110000 01010101<br>
+                                    00110011 11001100 01010101 10101010
                                 </div>
-                                <h3 class="text-2xl font-bold mb-2">Game Preview</h3>
-                                <p class="text-gray-400">Experience nostalgia like never before</p>
                             </div>
                         </div>
                     </div>
@@ -157,229 +561,53 @@
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="py-20 bg-gray-800 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 scroll-reveal">
-                <h2 class="text-4xl lg:text-5xl font-bold mb-4">Why Choose <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">FMod?</span></h2>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto">Experience the ultimate Chapter 1 Fortnite revival with cutting-edge features designed for the modern player</p>
+    <section id="features" class="py-32 relative overflow-hidden cyber-grid section-enter">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <h2 class="text-5xl lg:text-7xl font-black mb-8">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 neon-text">
+                        NEURAL FEATURES
+                    </span>
+                </h2>
+                <p class="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                    Cutting-edge technology meets nostalgic gameplay in the ultimate Chapter 1 experience
+                </p>
+                <div class="mt-8 mono text-cyan-400">
+                    <span class="animate-pulse">></span> Systems.Initialize();
+                </div>
             </div>
             
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700 scroll-reveal">
-                    <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="card-3d hologram p-10 rounded-3xl group hover:scale-105 transition-all duration-700 section-enter" style="animation-delay: 0.2s;">
+                    <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-cyan-500 rounded-2xl flex items-center justify-center mb-8 group-hover:rotate-12 transition-transform duration-500 morph-blob">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4">Lightning Fast Queues</h3>
-                    <p class="text-gray-400 leading-relaxed">Multiple dedicated servers across all regions ensure you get into games instantly. No more waiting - just pure gaming action.</p>
+                    <h3 class="text-3xl font-bold mb-6 neon-text text-green-400">QUANTUM QUEUES</h3>
+                    <p class="text-gray-300 leading-relaxed text-lg">
+                        Neural-powered matchmaking across infinite server dimensions. 
+                        Sub-second queue times guaranteed through quantum entanglement protocols.
+                    </p>
+                    <div class="mt-6 mono text-sm text-green-400 opacity-60">
+                        > avg_queue_time: 0.8s
+                    </div>
                 </div>
                 
-                <div class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700 scroll-reveal" style="animation-delay: 0.2s;">
-                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="card-3d hologram p-10 rounded-3xl group hover:scale-105 transition-all duration-700 section-enter" style="animation-delay: 0.4s;">
+                    <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-8 group-hover:rotate-12 transition-transform duration-500 morph-blob">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4">Earnable Rewards</h3>
-                    <p class="text-gray-400 leading-relaxed">Unlock cosmetics through skill and gameplay. Regular item shop updates bring fresh content without microtransactions.</p>
-                </div>
-                
-                <div class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700 scroll-reveal" style="animation-delay: 0.4s;">
-                    <div class="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">Advanced Anti-Cheat</h3>
-                    <p class="text-gray-400 leading-relaxed">Powered by Fortnite's Easy Anti-Cheat system, ensuring fair gameplay against legitimate players only.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Download Section -->
-    <section id="download" class="py-20 bg-gray-900 relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10">
-            <div class="absolute top-20 right-10 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl"></div>
-            <div class="absolute bottom-20 left-10 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl"></div>
-        </div>
-        
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16 scroll-reveal">
-                <h2 class="text-4xl lg:text-5xl font-bold mb-4">Ready to <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Play?</span></h2>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto">Join thousands of players experiencing Chapter 1 Fortnite like never before</p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <div class="card-hover bg-gradient-to-br from-blue-900 to-purple-900 p-8 rounded-2xl border border-blue-500 border-opacity-50 scroll-reveal">
-                    <div class="text-center">
-                        <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4">FMod Launcher</h3>
-                        <p class="text-gray-300 mb-6">Your gateway to Chapter 1 Fortnite. Connect with players worldwide and dive into nostalgic gameplay.</p>
-                        <button class="w-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
-                            Download Launcher
-                        </button>
+                    <h3 class="text-3xl font-bold mb-6 neon-text text-purple-400">MERIT PROTOCOL</h3>
+                    <p class="text-gray-300 leading-relaxed text-lg">
+                        Revolutionary skill-based cosmetic distribution. Each elimination, victory, and achievement 
+                        unlocks exclusive content through the Merit Algorithm.
+                    </p>
+                    <div class="mt-6 mono text-sm text-purple-400 opacity-60">
+                        > unlock_rate: SKILL_BASED
                     </div>
                 </div>
                 
-                <div class="card-hover bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-2xl border border-gray-700 scroll-reveal" style="animation-delay: 0.2s;">
-                    <div class="text-center">
-                        <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4">.NET Framework</h3>
-                        <p class="text-gray-300 mb-6">Required dependency for the FMod launcher. Ensure smooth operation across all Windows systems.</p>
-                        <button class="w-full glass-effect px-6 py-3 rounded-lg font-semibold hover:bg-white hover:bg-opacity-20 transition-all duration-300 transform hover:scale-105">
-                            Download .NET
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Getting Started Section -->
-    <section class="py-20 bg-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 scroll-reveal">
-                <h2 class="text-4xl lg:text-5xl font-bold mb-4">Getting <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Started</span></h2>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto">Everything you need to begin your Chapter 1 Fortnite journey</p>
-            </div>
-            
-            <div class="grid lg:grid-cols-2 gap-8">
-                <div class="space-y-6">
-                    <div class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 p-6 rounded-xl border border-gray-700 scroll-reveal">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h3 class="text-xl font-bold mb-2">Server Status</h3>
-                                <p class="text-gray-400">Check real-time server availability and performance metrics</p>
-                            </div>
-                            <button class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 p-6 rounded-xl border border-gray-700 scroll-reveal" style="animation-delay: 0.2s;">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h3 class="text-xl font-bold mb-2">VC Redistributables</h3>
-                                <p class="text-gray-400">Fix DLL errors and crashes with essential Windows components</p>
-                            </div>
-                            <button class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105">
-                                Download
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="space-y-6">
-                    <div class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 p-6 rounded-xl border border-gray-700 scroll-reveal" style="animation-delay: 0.1s;">
-                        <div class="aspect-video bg-gray-800 rounded-lg mb-4 flex items-center justify-center">
-                            <div class="text-center">
-                                <svg class="w-12 h-12 mx-auto mb-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.01M15 10h1.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <p class="text-gray-400">Tutorial Video</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4 scroll-reveal" style="animation-delay: 0.3s;">
-                        <a href="https://discord.fmod.dev" class="card-hover bg-gradient-to-br from-indigo-900 to-purple-900 p-4 rounded-xl text-center border border-indigo-500 border-opacity-50">
-                            <h4 class="font-bold">Discord</h4>
-                        </a>
-                        <a href="https://kick.com/fmod" class="card-hover bg-gradient-to-br from-green-900 to-teal-900 p-4 rounded-xl text-center border border-green-500 border-opacity-50">
-                            <h4 class="font-bold">Kick</h4>
-                        </a>
-                        <a href="https://twitter.com/@_fmod" class="card-hover bg-gradient-to-br from-blue-900 to-cyan-900 p-4 rounded-xl text-center border border-blue-500 border-opacity-50">
-                            <h4 class="font-bold">Twitter</h4>
-                        </a>
-                        <a href="https://www.tiktok.com/@.fmod" class="card-hover bg-gradient-to-br from-pink-900 to-red-900 p-4 rounded-xl text-center border border-pink-500 border-opacity-50">
-                            <h4 class="font-bold">TikTok</h4>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-12 bg-gray-900 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="flex items-center justify-center mb-6">
-                <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-4">
-                    <span class="text-2xl font-bold">F</span>
-                </div>
-                <span class="text-2xl font-bold text-glow">FMod</span>
-            </div>
-            <p class="text-gray-400 mb-4">Experience Chapter 1 Fortnite like never before</p>
-            <p class="text-gray-500 text-sm">&copy; 2025 FMod. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script>
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Scroll reveal animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('revealed');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.scroll-reveal').forEach(el => {
-            observer.observe(el);
-        });
-
-        // Mobile menu toggle (if needed)
-        function toggleMobileMenu() {
-            // Implementation for mobile menu if needed
-        }
-
-        // Add subtle parallax effect to hero section
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallax = document.querySelector('.hero-gradient');
-            const speed = scrolled * 0.5;
-            
-            if (parallax) {
-                parallax.style.transform = `translateY(${speed}px)`;
-            }
-        });
-
-        // Add loading animation
-        window.addEventListener('load', () => {
-            document.body.classList.add('loaded');
-        });
-    </script>
-</body>
-</html>
+                <div class="card-3
