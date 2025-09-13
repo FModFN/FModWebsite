@@ -9,15 +9,14 @@
 <body class="bg-gray-950 text-white font-sans antialiased">
   <!-- Navbar -->
   <header class="sticky top-0 z-50">
-    <div class="bg-yellow-400 text-gray-900 text-center font-medium py-1 flex justify-center items-center gap-2">
+    <div class="bg-yellow-400 text-gray-900 text-center font-medium py-1 flex justify-center items-center gap-2 rounded-b-xl shadow-md">
       <svg class="w-5 h-5 animate-bounce" fill="currentColor" viewBox="0 0 20 20"><path d="M8.257 3.099c.765-1.36..."/></svg>
       <span>Welcome back to <strong>FMod</strong> ❤️ Relive Fortnite Chapter 1</span>
     </div>
-    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4 bg-gray-900/80 backdrop-blur-xl shadow-lg">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4 bg-gray-900/80 backdrop-blur-xl shadow-lg rounded-xl mt-2">
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
-          <svg class="w-8 h-8 text-gray-900" viewBox="0 0 5000 5000"><path d="M1200 3398..."/></svg>
-        </div>
+        <img src="https://raw.githubusercontent.com/FModFN/FModWebsite/refs/heads/main/website_assets/FModLogo.svg" 
+             alt="FMod Logo" class="w-12 h-12 rounded-full shadow-md">
         <span class="text-xl font-bold tracking-tight">FMod</span>
       </div>
       <nav class="flex gap-6 text-gray-300">
@@ -30,7 +29,7 @@
   </header>
 
   <!-- Hero -->
-  <section class="relative h-[95vh] flex items-center justify-center">
+  <section class="relative h-[95vh] flex items-center justify-center rounded-b-2xl overflow-hidden shadow-2xl">
     <img src="FMod_files/preview3.png" alt="Preview" class="absolute inset-0 w-full h-full object-cover">
     <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 to-gray-950/90"></div>
     <div class="relative text-center max-w-3xl px-6">
@@ -38,14 +37,14 @@
       <h1 class="text-5xl md:text-6xl font-extrabold mt-3 leading-tight">Relive Chapter 1 Fortnite with <span class="text-yellow-400">FMod</span></h1>
       <p class="text-gray-300 mt-6 text-lg">Free cosmetics earned by <span class="text-yellow-400">playing</span>, not paying.</p>
       <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-        <a href="#downloads" class="bg-yellow-400 text-black px-8 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 hover:bg-yellow-500 transition transform">Download for Free</a>
-        <a href="#about" class="bg-white/10 px-8 py-3 rounded-xl font-semibold hover:bg-white/20 transition">Learn More</a>
+        <a href="#downloads" class="bg-yellow-400 text-black px-8 py-3 rounded-2xl font-semibold shadow-lg hover:scale-105 hover:bg-yellow-500 transition transform">Download for Free</a>
+        <a href="#about" class="bg-white/10 px-8 py-3 rounded-2xl font-semibold hover:bg-white/20 transition">Learn More</a>
       </div>
     </div>
   </section>
 
   <!-- About -->
-  <section id="about" class="py-20 bg-gray-900">
+  <section id="about" class="py-20 bg-gray-900 rounded-2xl mt-12 mx-4 shadow-xl">
     <div class="max-w-6xl mx-auto px-6">
       <h2 class="text-4xl font-extrabold text-center">Why choose <span class="text-yellow-400">FMod</span>?</h2>
       <p class="text-gray-400 uppercase text-center mt-3 tracking-wide">The ultimate free OG Fortnite experience</p>
@@ -67,7 +66,7 @@
   </section>
 
   <!-- Downloads -->
-  <section id="downloads" class="py-20 bg-gray-950">
+  <section id="downloads" class="py-20 bg-gray-950 mt-12 mx-4 rounded-2xl shadow-xl">
     <div class="max-w-6xl mx-auto px-6">
       <h2 class="text-4xl font-extrabold text-right">Ready to play?</h2>
       <p class="text-gray-400 uppercase text-right mt-3 tracking-wide">Join thousands already playing every day</p>
@@ -75,24 +74,24 @@
         <div class="bg-gray-800 p-8 rounded-2xl shadow-lg hover:scale-105 transition">
           <h3 class="text-2xl font-bold">🚀 Launcher Download</h3>
           <p class="text-gray-300 mt-3">The launcher is your gateway to matches and updates.</p>
-          <a href="https://cdn.fmod.dev/FModLauncherSetup.exe" download class="block w-full mt-6 bg-yellow-400 text-black font-semibold py-3 rounded-xl text-center hover:bg-yellow-500 hover:scale-105 transition">Download Launcher</a>
+          <a href="https://cdn.fmod.dev/FModLauncherSetup.exe" download class="block w-full mt-6 bg-yellow-400 text-black font-semibold py-3 rounded-2xl text-center hover:bg-yellow-500 hover:scale-105 transition">Download Launcher</a>
         </div>
         <div class="bg-gray-800 p-8 rounded-2xl shadow-lg hover:scale-105 transition">
           <h3 class="text-2xl font-bold">⚙️ .NET Framework</h3>
           <p class="text-gray-300 mt-3">Required to run the launcher smoothly.</p>
-          <a href="https://download.visualstudio.microsoft.com/download/pr/9e2b44b4-8f1c-4c5b-8177-6f1c7f11d51d/NetFrameworkSetup.exe" download class="block w-full mt-6 bg-yellow-400 text-black font-semibold py-3 rounded-xl text-center hover:bg-yellow-500 hover:scale-105 transition">Download .NET</a>
+          <a href="https://download.visualstudio.microsoft.com/download/pr/9e2b44b4-8f1c-4c5b-8177-6f1c7f11d51d/NetFrameworkSetup.exe" download class="block w-full mt-6 bg-yellow-400 text-black font-semibold py-3 rounded-2xl text-center hover:bg-yellow-500 hover:scale-105 transition">Download .NET</a>
         </div>
       </div>
     </div>
   </section>
 
   <!-- System Requirements -->
-  <section class="py-20 bg-gray-900">
+  <section class="py-20 bg-gray-900 mt-12 mx-4 rounded-2xl shadow-xl">
     <div class="max-w-6xl mx-auto px-6">
       <h2 class="text-4xl font-extrabold text-center">System Requirements</h2>
       <p class="text-gray-400 text-center mt-3">Can your PC handle FMod?</p>
       <div class="grid md:grid-cols-2 gap-8 mt-10">
-        <div class="bg-gray-800 p-6 rounded-xl shadow">
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg">
           <h3 class="text-lg font-bold mb-3">Minimum</h3>
           <ul class="text-gray-300 space-y-2">
             <li>OS: Windows 10 (64-bit)</li>
@@ -102,7 +101,7 @@
             <li>Storage: 30 GB free</li>
           </ul>
         </div>
-        <div class="bg-gray-800 p-6 rounded-xl shadow">
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg">
           <h3 class="text-lg font-bold mb-3">Recommended</h3>
           <ul class="text-gray-300 space-y-2">
             <li>OS: Windows 11 (64-bit)</li>
@@ -117,19 +116,19 @@
   </section>
 
   <!-- FAQ -->
-  <section id="faq" class="py-20 bg-gray-950">
+  <section id="faq" class="py-20 bg-gray-950 mt-12 mx-4 rounded-2xl shadow-xl">
     <div class="max-w-6xl mx-auto px-6">
       <h2 class="text-4xl font-extrabold text-center">Frequently Asked Questions</h2>
       <div class="mt-12 space-y-6">
-        <div class="bg-gray-800 p-6 rounded-xl shadow">
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg">
           <h3 class="text-lg font-bold">Is FMod free?</h3>
           <p class="text-gray-300 mt-2">Yes! FMod is completely free to play. All cosmetics are earned through gameplay.</p>
         </div>
-        <div class="bg-gray-800 p-6 rounded-xl shadow">
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg">
           <h3 class="text-lg font-bold">Can I play with friends?</h3>
           <p class="text-gray-300 mt-2">Absolutely. Our matchmaking system supports squads, duos, and solos.</p>
         </div>
-        <div class="bg-gray-800 p-6 rounded-xl shadow">
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg">
           <h3 class="text-lg font-bold">How often are updates released?</h3>
           <p class="text-gray-300 mt-2">We push regular updates with new cosmetics, bug fixes, and gameplay tweaks.</p>
         </div>
@@ -138,7 +137,7 @@
   </section>
 
   <!-- Footer -->
-  <footer id="contact" class="bg-gray-900 py-12 border-t border-gray-800">
+  <footer id="contact" class="bg-gray-900 py-12 border-t border-gray-800 rounded-t-2xl shadow-inner mt-12 mx-4">
     <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between gap-10">
       <div>
         <h4 class="text-2xl font-bold text-yellow-400">FMod</h4>
